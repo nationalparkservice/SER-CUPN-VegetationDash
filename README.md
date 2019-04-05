@@ -9,7 +9,7 @@ output:
 
 &nbsp;
 
-#### PURPOSE: Visualize CUPN forest monitoring data; Generate summary (figures and tables only) reports as .pdf or .doc.
+#### PURPOSE: Visualize CUPN forest monitoring data; Generate summary (figures and tables only) reports
 
 &nbsp;
 
