@@ -21,8 +21,7 @@ package.check <- lapply(packages, FUN = function(x) {
 })
 
 options(shiny.maxRequestSize = 20*1024^2) # allows data files up to 20 MB to be imported
-wd <- getwd()
-opts_chunk$set(root.dir = wd)
+opts_chunk$set(root.dir = getwd())
 
 source('CUPNVegFlex.R') # executes the source script, loads functions that will be used by the dashboard
 Out_list <- reactiveValues(CUPNbounds = NULL, MapDat = NULL, OakHick = NULL, OakHickDat = NULL, QAQCHerbs = NULL, QAQCTrees = NULL, QAQCSites = NULL, Thresholds = NULL, SelOptions = NULL, ThreshList = NULL, ThreshTable = NULL) # alternative should be NA, not NULL
@@ -62,13 +61,13 @@ checkboxGroupInput("sel_QAQCRpts",
                    selected = NULL)
 bsPopover(id = "sel_QAQCRpts", title = "QAQC Reports", content = "These reports summarize repeatability in estimates of vegetation field metrics. In each survey year at each park, a subset of plots are re-surveyed within one week of the original plot survey. QAQC reports summarize measurement variability for each metric, e.g., differences in classification of herb cover class between two survey teams.", placement = "left", options = list(container = "body"))
 
-# STILL NEED TO DO THIS ONE BELOW
-checkboxGroupInput("sel_Maps", 
-                   label = "MAPS",
-                   choiceNames = list("Native herb richness", "Exotic herb richness"),
-                   choiceValues = list("NativeRichMap", "ExoticRichMap"),
-                   selected = NULL)
-bsPopover(id = "sel_Maps", title = "MAPS", content = "These reports show the distribution of the selected metric (e.g., native herb richness) across a park, with each survey site colored according to its scorecard category for that metric.", placement = "left", options = list(container = "body"))
+# # STILL NEED TO DO THIS ONE BELOW
+# checkboxGroupInput("sel_Maps", 
+#                    label = "MAPS",
+#                    choiceNames = list("Native herb richness", "Exotic herb richness"),
+#                    choiceValues = list("NativeRichMap", "ExoticRichMap"),
+#                    selected = NULL)
+# bsPopover(id = "sel_Maps", title = "MAPS", content = "These reports show the distribution of the selected metric (e.g., native herb richness) across a park, with each survey site colored according to its scorecard category for that metric.", placement = "left", options = list(container = "body"))
 ```
 
 Column {data-width=190}
@@ -109,6 +108,13 @@ observeEvent(eventExpr = input$button_load, {
   withProgress(message = "Loading all data...", value = 0, {
     Sys.sleep(0.25)
     
+    files_load = list.files(path = './Temp_out', pattern = '*.RDS') # make sure there are processed summary files in Temp_out
+    
+    if(length(files_load)== 0)
+    {showModal(modalDialog(title = "Aaaack!", "No .RDS files in the 'Temp_out' folder!  Please import and process new data, then try again"))}
+    
+    validate(need(length(files_load) > 0, message = FALSE))
+    
     Out_list$CUPNbounds <- if(file.exists("Map_files/CUPNmapbounds.RDS")) readRDS("Map_files/CUPNmapbounds.RDS")
     
     Out_list$SelOptions <- if(file.exists("Temp_out/sel_options.RDS")) readRDS("Temp_out/sel_options.RDS")
@@ -142,8 +148,12 @@ observeEvent(eventExpr = input$button_load, {
 observeEvent(eventExpr = input$button_import, {
   withProgress(message = "Importing and processing data files...", value = 0, {
     dat_temp = list.files(path = './Data_in', pattern = '*.csv') # identify all .csv files in the Data_in folder
+    if(length(dat_temp)== 0)
+      {showModal(modalDialog(title = "Aaaack!", "No .csv files in the 'Data_in' folder!  Please add the data files and try again"))}
+    validate(need(length(dat_temp) > 0, message = FALSE))
+
     map_temp = list.files(path = './Map_files/CUPN_shapefiles', pattern = '*.shp') 
-    validate(need(length(dat_temp) > 0, "No .csv files in the 'Data_in' folder. Please add the data files and try again."))
+
 
     Process_df <- data.frame(rbind(
     c("VegDat.csv", "Maps"),
@@ -165,14 +175,14 @@ observeEvent(eventExpr = input$button_import, {
     c("Densiometer.csv", "QAQC - Trees"),
     c("SiteMetrics.csv", "QAQC - Site"),
     c("CWD.cvs", "QAQC - Site"), 
-    c("Community.csv", "QAQC - Site")),
+    c("Community.csv", "QAQC - Site"),
     c("cegl_x_bin.csv", "Thresholds"),
     c("qry_event_HPExotic_count_byPanelYear.csv", "Thresholds"),
     c("qry_panel_taxaGroup_seedsapl.csv", "Thresholds"),
     c("qry_panel_taxaGroup_tree.csv", "Thresholds"),
     c("qry_snagDensity_event_panel.csv", "Thresholds"),
     c("qry_stat_cwd_byPanelYear.csv", "Thresholds"),
-    c("qry_tree_eventGrowthMort_panel.csv", "Thresholds"))
+    c("qry_tree_eventGrowthMort_panel.csv", "Thresholds")))
   names(Process_df) <- c("DataRequired", "Analysis")
   
   # Map Data Summaries
@@ -181,14 +191,14 @@ observeEvent(eventExpr = input$button_import, {
     FuncMapDatMain()
     Out_list$MapDat <- readRDS("Temp_out/MapDatOut.RDS")
   }
-  
+
   # Map Boundaries
   if(all(as.character(Process_df$DataRequired[Process_df$Analysis == "Map Boundaries"]) %in% map_temp)) {
     incProgress(1/10, detail = " for 'Map Boundaries'")
     FuncMapBounds()
     Out_list$CUPNbounds <-  readRDS("Map_files/CUPNmapbounds.RDS")
   }
-  
+
   # Oak-Hickory
   if(all(as.character(Process_df$DataRequired[Process_df$Analysis == "Oak-Hickory"]) %in% dat_temp)) {
     incProgress(1/10, detail = " for 'Oak-Hickory' report")
@@ -203,23 +213,23 @@ observeEvent(eventExpr = input$button_import, {
     FuncQAQCSitesMain()
     Out_list$QAQCSites <- readRDS("Temp_out/QAQCSitesOut.RDS")
     }
-  
+
     # QAQC - Trees
   if(all(as.character(Process_df$DataRequired[Process_df$Analysis == "QAQC - Trees"]) %in% dat_temp)) {
     incProgress(1/10, detail = " for 'QAQC - Trees' report")
     FuncQAQCTreesMain()
     Out_list$QAQCTrees <- readRDS("Temp_out/QAQCTreesOut.RDS")
   }
-  
+
   # QAQC - Herbs
-  if(as.character(Process_df$DataRequired[Process_df$Analysis == "QAQC - Herbs"]) %in% dat_temp) {
+  if(all(as.character(Process_df$DataRequired[Process_df$Analysis == "QAQC - Herbs"]) %in% dat_temp)) {
     incProgress(1/10, detail = " for 'QAQC - Herbs' reports")
     FuncQAQCHerbsMain()
     Out_list$QAQCHerbs <- readRDS("Temp_out/QAQCHerbsOut.RDS")
   }
-  
+
     # Thresholds
-  if(as.character(Process_df$DataRequired[Process_df$Analysis == "Thresholds"]) %in% dat_temp) {
+  if(all(as.character(Process_df$DataRequired[Process_df$Analysis == "Thresholds"]) %in% dat_temp)) {
     incProgress(1/10, detail = " for 'Thresholds' plots")
     FuncThreshMain()
     Out_list$ThreshList <- readRDS("Temp_out/ThreshList.RDS")
@@ -622,6 +632,7 @@ renderPlot({
   validate(need(nrow(RT_list()[["FinalDat_df"]]) > 0, message = FALSE))
   if(input$sel_RTdat %in% c("Status", "Crown", "Dieback", "SnagDecay", "Vigor")) { # for categorical variables
     RTcateg_PlotColMat <- FuncColMat(QAQC_df = RT_list()[["FinalDat_df"]][, c("Value1", "Value2")], categ_vec = RT_list()[["categ_vec"]], upper_only = TRUE, title_add = paste0("QAQC Evaluation - ", input$sel_RTdat))
+    if(file.exists('Rplots.pdf')) {file.remove('Rplots.pdf')}
     replayPlot(RTcateg_PlotColMat)
     } else { # for continuous variables
     validate(need(nrow(RT_list()[["FinalDat_df"]]) > 0, message = FALSE))
@@ -810,24 +821,22 @@ renderUI({
     sliderInput("sel_MapScore", label = "Change scorecard cut-offs:", min = defaultvals["xmin"], max = defaultvals["xmax"], value = c(defaultvals["xcut1"], defaultvals["xcut2"]), step = defaultvals["xstep"], ticks = TRUE, dragRange = TRUE, width = "85%")
   }
 })
-```
 
-Column
--------------------------------------
-```{r setzoom}
 renderUI({
   if(!is.null(input$sel_MapPark) & !is.null(Out_list$CUPNbounds)) {
     CUPNmapbounds_SP <- subset(Out_list$CUPNbounds, SubUnitLab==input$sel_MapPark)
 map_zoom <- min(MaxZoom(lonrange = range(CUPNmapbounds_SP$long), latrange = range(CUPNmapbounds_SP$lat)))
 
-  sliderInput("sel_MapZoom", label = "Set map zoom (smaller = wider view):", min = map_zoom - 3, max = 18, value = map_zoom - 0.25, step = 0.25, ticks = FALSE, dragRange = FALSE, width = "85%")
+  sliderInput("sel_MapZoom", label = "Set map zoom (smaller = wider view):", min = map_zoom - 8, max = 17, value = map_zoom - 0.25, step = 0.25, ticks = FALSE, dragRange = FALSE, width = "85%")
     }
   })
 ```
-*\*Open circles indicate a value of zero (0)*
 
+Column
+-------------------------------------
+*\*Open circles indicate a value of zero (0)*
 ```{r maps}
-renderLeaflet({
+output$vegmap = renderLeaflet({
   validate(need(!is.null(Out_list$CUPNbounds) & !is.null(Out_list$MapDat), message = FALSE))
   Dat_df = Out_list$MapDat[[input$sel_MapMetric]]
   if(input$sel_MapMetric == "OakHick") {
@@ -891,4 +900,5 @@ renderLeaflet({
   }
   }
 })
+leafletOutput('vegmap', height=600)
 ```

@@ -117,7 +117,7 @@ FuncMapBounds <- function () {
   CUPNmap <- spTransform(CUPNmap, CRS("+init=epsg:4326")) # make sure shapefiles are in same projection as google maps
   CUPNmap@data$id <- rownames(CUPNmap@data)
   CUPNmapbounds_df <- CUPNmap %>% broom::tidy() %>%  # convert to data frame with boundary information
-    left_join(CUPNmap@data[,c("SubUnitLab", "id")], by = "id")
+    left_join(CUPNmap@data[,c("SubUnitLab", "id")], by = "id") # will give ignorable warning about binding factor class to character class
   saveRDS(CUPNmapbounds_df, "Map_files/CUPNmapbounds.RDS")
 }
  
@@ -2463,3 +2463,4 @@ FuncOakHickMain <- function () {
     OHfinal_df = OHfinal_df)
   saveRDS(OakHickOut_list, "Temp_out/OakHickOut.RDS")
 }
+
