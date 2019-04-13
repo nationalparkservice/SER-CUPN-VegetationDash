@@ -50,7 +50,7 @@ Make sure the following required file folders are present in the same directory 
 Double-click the ‘CUPNVegFlex.Rmd’ file to open it in RStudio. In RStudio, click the green triangle next to ‘Run Document’. The Dashboard is best viewed in a browser window, so in the Dashboard pop-up click the ‘Open in Browser’ option (top left corner). Follow the instructions on the main page of the Dashboard, for processing raw data to visualize with the Dashboard.
 
 ***
-#### DOWNLOADING NEW GOOGLE MAPS FOR PARKS
+#### DOWNLOADING NEW GOOGLE MAPS FOR PARKS (only necessary if new parks are added)
 This process is likely to change, but as of August 2018 the steps are:
 
 1. Install and load the R package 'rlang'. To register your API key you will need version >= 0.2.1
