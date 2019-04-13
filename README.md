@@ -1,8 +1,4 @@
 ---
-output:
-  html_document: default
-  pdf_document: default
----
 # CUPN VEGETATION DASHBOARD
 #### April 5, 2019
 #### Ellen Cheng
