@@ -38,13 +38,13 @@ The following R packages should be updated via GitHub, which has a more recent v
 
 #### STEP 2. MAKE SURE REQUIRED FILE FOLDERS ARE PRESENT
 Make sure the following required file folders are present in the same directory as the Dashboard (‘CUPNVegFlex.Rmd’):
-* ‘Data_in’:  Put raw data files in this folder for Dashboard analysis.
+* ‘Data_in’:  (ADD LOCALLY) Put raw data files in this folder for Dashboard analysis.
 * ‘logos’: This folder holds the logo image files used on the Dashboard.
 * ‘Map_files’:  This folder holds files required for mapping (park boundary and google map RDS files, GIS shape files).
-* ‘PDFs’: This folder holds .pdf files that explain the various pages of the Dashboard. They are accessed when a user clicks the ‘About this Page’ button on a Dashboard page.
-* ‘Reports_out’: When reports are generated, the resulting files (.pdf or .doc) are stored in this folder.
-* ‘RMD_files’: This folder holds the Rmd files that are executed when raw data files are processed.
-* ‘Temp_out’:  When raw data files are processed, the resulting output summary files (Rmd) are stored in this folder.
+* ‘PDFs’:  This folder holds .pdf files that explain the various pages of the Dashboard. They are accessed when a user clicks the ‘About this Page’ button on a Dashboard page.
+* ‘Reports_out’:  (ADD LOCALLY) When reports are generated, the resulting files (.pdf or .doc) are stored in this folder.
+* ‘RMD_files’:  This folder holds the Rmd files that are executed when raw data files are processed.
+* ‘Temp_out’:  (ADD LOCALLY) When raw data files are processed, the resulting output summary files (Rmd) are stored in this folder.
 
 
 #### STEP 3. RUN THE DASHBOARD
