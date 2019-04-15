@@ -37,6 +37,7 @@ The following R packages should be updated via GitHub, which has a more recent v
 * devtools::install_github("hadley/ggplot2") # v.2.2.1.9000
 * devtools::install_github("ramnathv/htmlwidgets") # v.1.2.1
 * devtools::install_github("ropensci/plotly") # v.4.7.1.9000
+* devtools::install_github('rstudio/DT') # v.0.5.3
 
 
 #### STEP 2. MAKE SURE REQUIRED FILE FOLDERS ARE PRESENT
