@@ -810,7 +810,7 @@ FuncPlotThreshMetric <- function(dat_df, by_cegl, by_cegl_park = NULL, y_nam, pl
     geom_point(size = 4, shape = 21, position = position_dodge(width = 0.5)) +
     labs(x = plot_labs$x, y = plot_labs$y, subtitle = plot_labs$subtitle) +
     scale_fill_grey() +
-    theme_bw(base_size = 11) +
+    theme_bw(base_size = 13) +
     theme(legend.title = element_blank(),
           legend.position = "top",
           axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
@@ -914,7 +914,7 @@ FuncPlotThreshPark <- function(dat_df, y_nam, plot_title, combo, add95) {
       geom_point(size = 4, shape = 21, position = position_dodge(width = 0.5)) +
       labs(subtitle = i) +
       scale_fill_grey() +
-      theme_bw(base_size = 11) +
+      theme_bw(base_size = 13) +
       theme(legend.position = "top",
             legend.title = element_blank(),
             strip.background = element_blank(),
