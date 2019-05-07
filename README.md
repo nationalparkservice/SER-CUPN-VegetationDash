@@ -48,7 +48,7 @@ Make sure the following required file folders are present in the same directory 
 
 
 #### STEP 3. RUN THE DASHBOARD
-Double-click the ‘CUPNVegFlex.Rmd’ file to open it in RStudio. In RStudio, click the green triangle next to ‘Run Document’. The Dashboard is best viewed in a browser window, so in the Dashboard pop-up click the ‘Open in Browser’ option (top left corner). Follow the instructions on the main page of the Dashboard, for processing raw data to visualize with the Dashboard.
+Double-click the ‘CUPNVegFlex.Rmd’ file to open it in RStudio. In RStudio, click the green triangle next to ‘Run Document’. The Dashboard is best viewed in a browser window, so in the Dashboard pop-up click the ‘Open in Browser’ option (top left corner; Chrome is best, start-up is slow and formatting may be wonky in Internet Explorer). Follow the instructions on the main page of the Dashboard, for processing raw data to visualize with the Dashboard.
 
 ***
 #### DOWNLOADING NEW GOOGLE MAPS FOR PARKS (only necessary if new parks are added)
